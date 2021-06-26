@@ -2,7 +2,6 @@
 #define CONSTANTS_H
 
 #include <iostream>
-
 namespace constants {
     inline constexpr std::size_t kFramesPerSecond{60};
     inline constexpr std::size_t kMsPerFrame{1000 / kFramesPerSecond};

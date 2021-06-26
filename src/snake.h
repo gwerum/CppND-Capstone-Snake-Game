@@ -18,13 +18,13 @@ class Snake {
   
   // Moving 'one-liner' methods to header file to give compiler more information
   // to work with when optimizing the code
-  bool eats(const GameCell &food) const { return _head == food; };
-  void GrowBody(){ _growing = true; };
-  void IncreaseSpeed(float speedIncrement) {_speed += speedIncrement;};
-  bool isAlive() const{ return _alive; };
-  int size() const {return _size;};
-  const std::vector<GameCell>& body() const { return _body;}
-  const GameCell& head() const { return _head; }
+  inline bool eats(const GameCell &food) const { return _head == food; };
+  inline void GrowBody(){ _growing = true; };
+  inline void IncreaseSpeed(float speedIncrement) {_speed += speedIncrement;};
+  inline bool isAlive() const{ return _alive; };
+  inline int size() const {return _size;};
+  inline const std::vector<GameCell>& body() const { return _body;}
+  inline const GameCell& head() const { return _head; }
 
   Direction direction = Direction::kUp;
 
