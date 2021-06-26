@@ -6,24 +6,24 @@
 #include "controller.h"
 #include "renderer.h"
 #include "snake.h"
+#include "objects.h"
 
 class Game {
  public:
   Game();
   void Run(Controller const &controller, Renderer &renderer);
-  int GetScore() const;
-  int GetSize() const;
+  int GetScore() const { return score; };
+  int GetSize() const { return snake.size(); };
 
  private:
   Snake snake;
-  SDL_Point food;
-
+  GameCell food;
+  int score{0};
+  // Variables required for random engines
   std::random_device dev;
   std::mt19937 engine;
   std::uniform_int_distribution<int> random_w;
   std::uniform_int_distribution<int> random_h;
-
-  int score{0};
 
   void PlaceFood();
   void Update();

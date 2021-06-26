@@ -4,9 +4,9 @@
 #include "SDL.h"
 
 Game::Game()
-    : engine(dev()),
-      random_w(0, static_cast<int>(constants::kGridWidth - 1)),
-      random_h(0, static_cast<int>(constants::kGridHeight - 1)) {
+: engine(dev()),
+  random_w(0, static_cast<int>(constants::kGridWidth - 1)),
+  random_h(0, static_cast<int>(constants::kGridHeight - 1)) {
   PlaceFood();
 }
 
@@ -50,25 +50,25 @@ void Game::Run(Controller const &controller, Renderer &renderer) {
 }
 
 void Game::PlaceFood() {
-  SDL_Point point;
+  GameCell new_food;
   while (true) {
-    point.x = random_w(engine);
-    point.y = random_h(engine);
+    new_food.x = random_w(engine);
+    new_food.y = random_h(engine);
     // Check that the location is not occupied by a snake item before placing
     // food.
-    if (!snake.SnakeCell(point)) {
-      food = point;
+    if (!snake.SnakeCell(new_food)) {
+      food = std::move(new_food);
       return;
     }
   }
 }
 
 void Game::Update() {
+  // Make no updates if snake is dead
   if (!snake.isAlive()) return;
-
+  // Make default snake update
   snake.Update();
-
-  // Check if there's food over here
+  // Make additional updates if snake eats food
   if (snake.eats(food)) {
     score++;
     PlaceFood();
@@ -77,6 +77,3 @@ void Game::Update() {
     snake.IncreaseSpeed(0.02);
   }
 }
-
-int Game::GetScore() const { return score; }
-int Game::GetSize() const { return snake.size(); }

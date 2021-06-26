@@ -5,13 +5,14 @@
 #include "SDL.h"
 #include "snake.h"
 #include "constants.h"
+#include "objects.h"
 
 class Renderer {
  public:
   Renderer();
   ~Renderer();
 
-  void Render(const Snake &snake, const SDL_Point &food);
+  void Render(const Snake &snake, const GameCell &food);
   void UpdateWindowTitle(int score, int fps);
 
  private:

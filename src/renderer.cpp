@@ -37,7 +37,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(const Snake &snake, const SDL_Point &food) {
+void Renderer::Render(const Snake &snake, const GameCell &food) {
 
   // Clear screen
   SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
@@ -51,15 +51,16 @@ void Renderer::Render(const Snake &snake, const SDL_Point &food) {
 
   // Render snake's body
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-  for (SDL_Point const &point : snake._body) {
+  for (GameCell const &point : snake.body()) {
     block.x = point.x * block.w;
     block.y = point.y * block.h;
     SDL_RenderFillRect(sdl_renderer, &block);
   }
 
   // Render snake's head
-  block.x = static_cast<int>(snake._head_x) * block.w;
-  block.y = static_cast<int>(snake._head_y) * block.h;
+  const GameCell &head = snake.head();
+  block.x = head.x * block.w;
+  block.y = head.y * block.h;
   if (snake.isAlive()) {
     SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
   } else {
