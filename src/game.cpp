@@ -1,17 +1,16 @@
 #include "game.h"
+#include "constants.h"
 #include <iostream>
 #include "SDL.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : snake(grid_width, grid_height),
-      engine(dev()),
-      random_w(0, static_cast<int>(grid_width - 1)),
-      random_h(0, static_cast<int>(grid_height - 1)) {
+Game::Game()
+    : engine(dev()),
+      random_w(0, static_cast<int>(constants::kGridWidth - 1)),
+      random_h(0, static_cast<int>(constants::kGridHeight - 1)) {
   PlaceFood();
 }
 
-void Game::Run(Controller const &controller, Renderer &renderer,
-               std::size_t target_frame_duration) {
+void Game::Run(Controller const &controller, Renderer &renderer) {
   Uint32 title_timestamp = SDL_GetTicks();
   Uint32 frame_start;
   Uint32 frame_end;
@@ -44,44 +43,40 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // If the time for this frame is too small (i.e. frame_duration is
     // smaller than the target ms_per_frame), delay the loop to
     // achieve the correct frame rate.
-    if (frame_duration < target_frame_duration) {
-      SDL_Delay(target_frame_duration - frame_duration);
+    if (frame_duration < constants::kMsPerFrame) {
+      SDL_Delay(constants::kMsPerFrame - frame_duration);
     }
   }
 }
 
 void Game::PlaceFood() {
-  int x, y;
+  SDL_Point point;
   while (true) {
-    x = random_w(engine);
-    y = random_h(engine);
+    point.x = random_w(engine);
+    point.y = random_h(engine);
     // Check that the location is not occupied by a snake item before placing
     // food.
-    if (!snake.SnakeCell(x, y)) {
-      food.x = x;
-      food.y = y;
+    if (!snake.SnakeCell(point)) {
+      food = point;
       return;
     }
   }
 }
 
 void Game::Update() {
-  if (!snake.alive) return;
+  if (!snake.isAlive()) return;
 
   snake.Update();
 
-  int new_x = static_cast<int>(snake.head_x);
-  int new_y = static_cast<int>(snake.head_y);
-
   // Check if there's food over here
-  if (food.x == new_x && food.y == new_y) {
+  if (snake.eats(food)) {
     score++;
     PlaceFood();
     // Grow snake and increase speed.
     snake.GrowBody();
-    snake.speed += 0.02;
+    snake.IncreaseSpeed(0.02);
   }
 }
 
 int Game::GetScore() const { return score; }
-int Game::GetSize() const { return snake.size; }
+int Game::GetSize() const { return snake.size(); }

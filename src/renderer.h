@@ -4,24 +4,21 @@
 #include <vector>
 #include "SDL.h"
 #include "snake.h"
+#include "constants.h"
 
 class Renderer {
  public:
-  Renderer(const std::size_t screen_width, const std::size_t screen_height,
-           const std::size_t grid_width, const std::size_t grid_height);
+  Renderer();
   ~Renderer();
 
-  void Render(Snake const snake, SDL_Point const &food);
+  void Render(const Snake &snake, const SDL_Point &food);
   void UpdateWindowTitle(int score, int fps);
 
  private:
   SDL_Window *sdl_window;
   SDL_Renderer *sdl_renderer;
 
-  const std::size_t screen_width;
-  const std::size_t screen_height;
-  const std::size_t grid_width;
-  const std::size_t grid_height;
+  SDL_Rect block; // block variable for rendering any kind of object (food, snake body, snake head)
 };
 
 #endif
