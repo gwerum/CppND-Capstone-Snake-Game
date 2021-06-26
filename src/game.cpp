@@ -20,16 +20,21 @@ void Game::Run(Controller const &controller, Renderer &renderer) {
 
   while (running) {
     frame_start = SDL_GetTicks();
-
+    auto start_clock = std::chrono::steady_clock::now();
+    
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
     Update();
     renderer.Render(snake, food);
 
-    frame_end = SDL_GetTicks();
+    // Compute and print execution time
+    auto end_clock = std::chrono::steady_clock::now();
+    auto diff_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end_clock - start_clock);
+    std::cout << "Exec time: " << diff_ns.count() << " ns" << std::endl;
 
     // Keep track of how long each loop through the input/update/render cycle
     // takes.
+    frame_end = SDL_GetTicks();
     frame_count++;
     frame_duration = frame_end - frame_start;
 
@@ -46,6 +51,7 @@ void Game::Run(Controller const &controller, Renderer &renderer) {
     if (frame_duration < constants::kMsPerFrame) {
       SDL_Delay(constants::kMsPerFrame - frame_duration);
     }
+
   }
 }
 
