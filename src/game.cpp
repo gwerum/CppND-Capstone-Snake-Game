@@ -66,8 +66,6 @@ void Game::PlaceFood() {
 void Game::Update() {
   // Make no updates if snake is dead
   if (!snake.isAlive()) return;
-  
-  auto start_clock = std::chrono::steady_clock::now();
   // Make default snake update
   snake.Update();
   // Make additional updates if snake eats food
@@ -77,10 +75,5 @@ void Game::Update() {
     // Grow snake and increase speed.
     snake.GrowBody();
     snake.IncreaseSpeed(0.02);
-
-    // Compute execution time and print to console
-    auto end_clock = std::chrono::steady_clock::now();
-    auto diff_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end_clock - start_clock);
-    std::cout << "Exec time: " << diff_ns.count() << " ns" << std::endl;
   }
 }
