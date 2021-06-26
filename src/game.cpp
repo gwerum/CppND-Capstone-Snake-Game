@@ -21,17 +21,11 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
   while (running) {
     frame_start = SDL_GetTicks();
-    auto start_clock = std::chrono::steady_clock::now();
 
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
     Update();
     renderer.Render(snake, food);
-
-    // Compute and print execution time
-    auto end_clock = std::chrono::steady_clock::now();
-    auto diff_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end_clock - start_clock);
-    std::cout << "Exec time: " << diff_ns.count() << " ns" << std::endl;
 
     // Keep track of how long each loop through the input/update/render cycle
     // takes.
@@ -73,6 +67,7 @@ void Game::PlaceFood() {
 void Game::Update() {
   if (!snake.alive) return;
 
+  auto start_clock = std::chrono::steady_clock::now();
   snake.Update();
 
   int new_x = static_cast<int>(snake.head_x);
@@ -85,6 +80,11 @@ void Game::Update() {
     // Grow snake and increase speed.
     snake.GrowBody();
     snake.speed += 0.02;
+
+    // Compute execution time and print to console
+    auto end_clock = std::chrono::steady_clock::now();
+    auto diff_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end_clock - start_clock);
+    std::cout << "Exec time: " << diff_ns.count() << " ns" << std::endl;
   }
 }
 
